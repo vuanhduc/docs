@@ -1,17 +1,22 @@
+Goals are reusable parts of functionality used within a CI/CD context. Think of tasks like starting a build, deploying your application to Kubernetes. These goals consist primarily of:
+
+- something to identify the goal by, i.e. a unique name
+- a block of code to be executed when the task needs to be run
+- metadata to describe the goal and when it is applicable.
+
 The most important SDM functionality relates to what
 happens on a push to a repository. An SDM allows you to process a push
 in any way you choose, but typically you want it to initiate a
-delivery flow.
+delivery flow. In short, an SDM allows you to set **goals** on as a response to 
+an event, for example a push. 
 
-An SDM allows you to set **goals** on push. Goals are used for the
-actions that make up a delivery flow, such as build and
-deployment. They can also be observational in nature; for example,
+Goals can also be observational in nature; for example,
 listening to a build and exporting data about its result and duration
 to a third party system.
 
 The goals set on a push don't need to be the same every time. Unlike
 the static pipelines you may be used to, with Atomist the delivery flow is not necessarily the same
-for every change.
+for every change. In essense, Atomist allows you to create a pipeline per push.
 
 Goals aren't configured per repository. They are chosen dynamically, in response to any
 push in any repository, based on the code and the context. What kind of project is it?
@@ -44,7 +49,7 @@ A [Goal][goal-apidoc] object supplies its name, descriptions for its various pos
 
 [goal-apidoc]: https://atomist.github.io/sdm/classes/_lib_api_goal_goal_.goal.html "API docs for Goal"
 
-There are several built-in goal implementations, or you can [create your own](#custom-goals). 
+There are several built-in goal implementations, or you can [create your own](#creating-a-goal). 
 
 For instance, an Autofix goal has one autofix registered on it; it will add license headers to any 
 code file that doesn't have one yet, and make a commit.
@@ -55,9 +60,45 @@ code file that doesn't have one yet, and make a commit.
 
 After you've created some goals, [choose when to set them][setting-goals].
 
+## Creating a goal
+
+You can define your own goal to extend Atomist's out of the box capabilities. For example, you can:
+
+- Delegate to a CLI by spawning a process and waiting for its result
+- Call the API of a third party service
+- Use a Node module or Atomist's API to implement your functionality right in TypeScript
+
+To define your own goal, you must provide a name and description and a function for how to execute it.
+
+### Using the `createGoal` function
+
+Use the `createGoal` function from @atomist/sdm; pass it an object with a `displayName` and as many properties out of [GoalDefinition][goaldef-apidoc] as you choose.
+Also pass a function to call when it's time to execute the goal. That function can return void or an [ExecuteGoalResult][egr-apidoc].
+
+For example:
+
+``` typescript
+const releaseDocs = createGoal(
+    { displayName: "My new goal"}, 
+    async (inv: GoalInvocation) => {
+        // do what is needed
+        return { code: 0 };
+    });
+```
+
+[goaldef-apidoc]: https://atomist.github.io/sdm/interfaces/_lib_api_goal_goal_.goaldefinition.html (GoalDefinition API Doc)
+[egr-apidoc]: https://atomist.github.io/sdm/interfaces/_lib_api_goal_executegoalresult_.executegoalresult.html (ExecuteGoalResult API Doc)
+
+/* ### Waiting on a Precondition
+
+Sometimes goals need other goals to have completed before they can start. This is handled in the push rule DSL.
+
+Sometimes they wait on external conditions, such as another service having started. This is handled with *wait rules*.
+*/
+
 ## Built-in Goals
 
-A goal object has some identifying information, code to fulfill the goal, and optional preconditions (goals that need to complete before it can start). Some common goals have their own constructors.
+A goal object has some identifying information, code to fulfill the goal, and optional preconditions (goals that need to complete before it can start). Some common goals have their own constructors. Atomist provides a couple of out of the box goal implementations for common CI tasks to be executed within a pipeline.
 
 ### AutoInspect
 
@@ -153,37 +194,3 @@ const pushImpactGoal = new PushImpact().with(listChangedFiles)
 ### Build
 
 This one has its [own section](build.md).
-
-## Custom Goals
-
-You can define your own goal to extend Atomist's out of the box capabilities. For example, you can:
-
-- Delegate to a CLI by spawning a process and waiting for its result
-- Call the API of a third party service
-- Use a Node module or Atomist's API to implement your functionality right in TypeScript
-
-To define your own goal, you must provide a name and description and a function for how to execute it.
-
-Use the `createGoal` function from @atomist/sdm; pass it an object with a `displayName` and as many properties out of [GoalDefinition][goaldef-apidoc] as you choose.
-Also pass a function to call when it's time to execute the goal. That function can return void or an [ExecuteGoalResult][egr-apidoc].
-
-For example:
-
-``` typescript
-const releaseDocs = createGoal(
-    { displayName: "Release Docs", preApprovalRequired: true }, 
-    async (inv: GoalInvocation) => {
-        // do what is needed
-        return { code: 0, targetUrl: "https://where-i-put-them" };
-    });
-```
-
-[goaldef-apidoc]: https://atomist.github.io/sdm/interfaces/_lib_api_goal_goal_.goaldefinition.html (GoalDefinition API Doc)
-[egr-apidoc]: https://atomist.github.io/sdm/interfaces/_lib_api_goal_executegoalresult_.executegoalresult.html (ExecuteGoalResult API Doc)
-
-### Waiting on a Precondition
-
-Sometimes goals need other goals to have completed before they can start. This is handled in the push rule DSL.
-
-Sometimes they wait on external conditions, such as another service having started. This is handled with *wait rules*.
-
