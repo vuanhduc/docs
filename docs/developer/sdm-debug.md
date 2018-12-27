@@ -34,3 +34,7 @@ In [IntelliJ IDEA][debug-idea], perform the following steps:
 Now in your run configurations in the top right corner, choose `Debug Atomist` and press the Debug icon.
 
 [debug-idea]: https://www.jetbrains.com/help/idea/debugging-code.html (Debugging in IntelliJ IDEA)
+
+## Debugging through logging
+
+See also: [Logging in an SDM](logging.md)

@@ -122,7 +122,7 @@ Register this builder on a [build goal](../developer/goal.md#build) to use it:
 import { Build } from "@atomist/sdm-pack-build";
 
 const build = new Build().with({
-    name: "npm-run-build",
+    name: "npm-build",
     builder: nodeBuilder("npm run compile", "npm test"),
     pushTest: IsNode,
 });
