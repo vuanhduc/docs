@@ -4,7 +4,7 @@
 
 #### Atomist service
  the part of the Atomist platform that is operated by Atomist the company:
- the event hub, GraphQL endpoint, and dashboard. [more info][architecture]
+ the event hub, GraphQL endpoint, and web interface. [more info][architecture]
 
 #### PushRule
 
@@ -59,7 +59,7 @@ this Slack workspace is free for everyone to [join](https://join.atomist.com). H
 a database where Atomist stores correlated events 
 
 #### dashboard
- there are many dashboards in the world. This one lives at [app.atomist.com](https://app.atomist.com), 
+ better known as the Atomist web interface, this lives at [app.atomist.com](https://app.atomist.com), 
 and it gives you access to some notifications and the settings for your Atomist workspace. [more info](../user/dashboard.md)
 
 #### delivery
@@ -166,6 +166,10 @@ a production environment within your network. [more info](team.md)
 #### version control
  in this guide, "version control" refers to the place where you push code to share it with your team
  like GitHub, GitLab, or BitBucket. Everyone uses git locally, right? (I know, not everyone does, but everyone who uses Atomist has to.)
+
+#### web interface
+ the Atomist web interface lives at [app.atomist.com](https://app.atomist.com), 
+and it gives you access to some notifications and the settings for your Atomist workspace. [more info](../user/dashboard.md)
 
 #### workspace
  many services have a concept of "workspace," and Atomist is one of them. An Atomist workspace represents your organization's account with Atomist.

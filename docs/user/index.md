@@ -1,5 +1,7 @@
 This page describes enrollment with Atomist as a service.
 
+<!-- ** TODO: in real life what do they need to do here? can they just enroll, or contact us? -->
+
 Atomist is here to help you smooth your development flow.  Start with
 our web console; see consolidated event notifications.  Add ChatOps
 with Slack if you have it.  Spawn your own software delivery machine,
@@ -53,7 +55,7 @@ to create the needed webhook(s).  For more information on how Atomist
 integrates with GitHub, see the [GitHub integration][atomist-github]
 documentation.
 
-The Atomist web dashboard will show you events, e.g., new commits and
+The Atomist web interface will show you events, e.g., new commits and
 issue and pull request activity, from GitHub.
 
 [www]: https://atomist.com/ (Atomist - How Teams Deliver Software)

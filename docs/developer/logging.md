@@ -9,13 +9,13 @@ Then there are logs for the SDM itself, where it outputs information about its o
 ## Goal Progress Logs
 
 To write to these within a goal execution, call `invocation.progressLog.write("stuff")`. You can also [send output from
-an external command](spawn.md#send-command-output-to-a-log).
+an external command](spawn.md#send-command-output-to-the-log).
 
 In [local mode](local.md), goal progress logs all go to a single file in `$HOME/.atomist/log`. When a goal fails, 
 that file's path is printed to the [feed](cli.md#atomist-feed).
 
 In [team mode](team.md), goal progress logs are sent to Atomist's log service. Each goal, as reported in chat
-or on the dashboard, links to its progress log. To see it, you must be logged in to the Atomist dashboard.
+or on the web interface, links to its progress log. To see it, you must be logged in to the Atomist web interface.
 
 When goal output is short, it is also sent to the SDM logs.
 
