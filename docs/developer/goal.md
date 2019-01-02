@@ -36,6 +36,8 @@ This page shows how to
 *  teach them what to do
 *  require approval
 
+<!-- ** TODO: say how to require approval -->
+
 The next page describes how to [set goals for each push][setting-goals].
 
 [setting-goals]: set-goals.md (Setting Goals in an SDM)
@@ -202,39 +204,4 @@ const pushImpactGoal = new PushImpact().with(listChangedFiles)
 ### Build
 
 This one has its [own section](build.md).
-
-## Custom Goals
-
-You can define your own goal to extend Atomist's out of the box capabilities. For example, you can:
-
-- Delegate to a CLI by spawning a process and waiting for its result
-- Call the API of a third party service
-- Use a Node module or Atomist's API to implement your functionality right in TypeScript
-
-To define your own goal, you must provide a name and description and a function for how to execute it.
-
-Use the `createGoal` function from @atomist/sdm; pass it an object with a `displayName` and as many properties out of [GoalDefinition][goaldef-apidoc] as you choose.
-Also pass a function to call when it's time to execute the goal. That function can return void or an [ExecuteGoalResult][egr-apidoc].
-
-For example:
-
-```typescript
-const releaseDocs = createGoal(
-    { displayName: "Release Docs", preApprovalRequired: true }, 
-    async (inv: GoalInvocation) => {
-        // do stuff
-        return { code: 0, targetUrl: "https://where-i-put-them" };
-    });
-```
-
-If you want to run an external command in your goal, [check this example](spawn.md#running-a-command-in-a-project).
-
-[goaldef-apidoc]: https://atomist.github.io/sdm/interfaces/_lib_api_goal_goal_.goaldefinition.html (GoalDefinition API Doc)
-[egr-apidoc]: https://atomist.github.io/sdm/interfaces/_lib_api_goal_executegoalresult_.executegoalresult.html (ExecuteGoalResult API Doc)
-
-### Waiting on a Precondition
-
-Sometimes goals need other goals to have completed before they can start. This is handled in the push rule DSL.
-
-Sometimes they wait on external conditions, such as another service having started. This is handled with *wait rules*.
 
