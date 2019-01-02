@@ -1,19 +1,22 @@
-This pack provides SDM functionality for Java.
+This pack provides SDM functionality for Java. 
 
 [GitHub][]
 
 [API Doc][api-doc]
+
+`npm install @atomist/sdm-pack-spring`
 
 [github]: https://github.com/atomist/sdm-pack-spring (GitHub Repository)
 [api-doc]: https://atomist.github.io/sdm-pack-spring/ (API Docs)
 
 # Building Java software
 
-The Spring pack provides a way to build Java software, handling the CI part of a CI/CD lifecycle. This functionality depends on the presence of the `sdm-pack-build` extension pack.
+The Spring pack provides a way to build Java software, handling the CI part of a CI/CD lifecycle. This functionality depends on the presence of the `@atomist/sdm-pack-build` extension pack, so add that
+to your dependencies as well.
 
 ## Building using Maven
 
-Building your application using Maven requires you to create a goal that kicks off a build using Maven:
+To build your application using Maven, create a goal that kicks off a build using Maven:
 
 ```typescript
 const mavenBuild = new Build().with({builder: mavenBuilder()})
@@ -67,7 +70,7 @@ This will allow you to issue a `create spring` command to Atomist which creates 
 
 * Change the title of the README to reflect the new name
 * Add the correct configuration in the Spring Boot property to have Atomist integration configured
-* Transforms the project based on the parameters you entered. This transform, which is Spring Boot specific, will:
+* Transform the project based on the parameters you entered. This transform, which is Spring Boot specific, will:
     * Change the POM
     * Change the package to the package defined by the parameters
     * Rename the application class name to reflect the project name as defined in the parameters
@@ -87,7 +90,7 @@ it will use the dependency information in the POM to create a dependency fingerp
 
 ## Review usage of provided dependency
 
-The `ProvidedDependencyReviewer` will check whether your project is using provided dependency and generate reveiw comments for each of those dependencies.
+The `ProvidedDependencyReviewer` will check whether your project is using provided dependencies and generate reveiw comments for each of those dependencies.
 You can then configure your `AutoCodeInspection` goal to use this reviewer.
 
 ## Transforms
@@ -100,7 +103,7 @@ You can use Atomist to add a dependency to a project, where it will add that dep
 sdm.addCodeTransformCommand(AddMavenDependency)
 ```
 
-This command will allow you to enter dependency information, and Atomist will edit the POM for you and add the dependency accordingly
+This command will allow you to enter dependency information, and Atomist will edit the POM for you and add the dependency accordingly.
 
 # Spring support
 
@@ -127,14 +130,14 @@ sdm.addExtensionPacks(
 
 This support pack will add the following:
 
-* Add code inspections for certain known Spring issues
-  * Violations common to cloud native application
-  * Violations common to modern Spring usage (usage of `RequestMapping` for example)
-* A listener that will put review comments into a single issue per branch. The pack will automatically manage/update that issue and close it if needed.
+* Code inspections for certain known Spring issues:
+    * Violations common to cloud native application
+    * Violations common to modern Spring usage (usage of `RequestMapping` for example)
+* An inspection listener that will put review comments into an issue, one per branch. The pack will automatically manage/update that issue and close it when the inspection is clean for the branch.
 
-## Specific push rules
+## Specific push tests
 
-The Spring support also provides a couple of push rules, like `IsMaven`, to support Spring specific applications. These are:
+The Spring support also provides a couple of [push tests](push-test.md), like `IsMaven`, to support Spring-specific applications. These are:
 
 * `HasSpringBootPom`: whether the POM of the project has a dependency to Spring Boot
 * `HasSpringBootApplicationClass`: whether the project has a class that is annotated with `@SpringBootApplication`
