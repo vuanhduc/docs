@@ -10,9 +10,8 @@ in any way you choose, but typically you want it to initiate a
 delivery flow. In short, an SDM allows you to set **goals** on as a response to 
 an event, for example a push. 
 
-Goals can also be observational in nature; for example,
-listening to a build and exporting data about its result and duration
-to a third party system.
+Goals can be completed by an SDM or elsewhere; for example, the SDM can recognize that a goal
+is complete when a build finishes in an external system.
 
 The goals set on a push don't need to be the same every time. Unlike
 the static pipelines you may be used to, with Atomist the delivery flow is not necessarily the same
@@ -20,7 +19,8 @@ for every change. In essense, Atomist allows you to create a pipeline per push.
 
 Goals aren't configured per repository. They are chosen dynamically, in response to any
 push in any repository, based on the code and the context. What kind of project is it?
-What branch was pushed? Is there a pull request? Which files changed?
+What branch was pushed? Is there a pull request? Which files changed? Brand-new repositories
+require no configuration.
 
 Goals are not necessarily sequential--by default they execute
 in parallel--but certain goals, such as deployment, have preconditions
@@ -40,6 +40,10 @@ The next page describes how to [set goals for each push][setting-goals].
 
 [setting-goals]: set-goals.md (Setting Goals in an SDM)
 
+<!-- TODO: separate Goal Overview from Create goals -->
+
+<!-- TODO: diagram showing goals created in an SDM, sent as events to Atomist, displayed in Slack -->
+
 ## Create goals
 
 Set up goals wherever you configure your SDM, probably in `lib/machine/machine.ts`. This example comes
@@ -49,14 +53,17 @@ A [Goal][goal-apidoc] object supplies its name, descriptions for its various pos
 
 [goal-apidoc]: https://atomist.github.io/sdm/classes/_lib_api_goal_goal_.goal.html "API docs for Goal"
 
-There are several built-in goal implementations, or you can [create your own](#creating-a-goal). 
+To experiment, you might want to
 
-For instance, an Autofix goal has one autofix registered on it; it will add license headers to any 
-code file that doesn't have one yet, and make a commit.
+* [create your own goal](#creating-a-goal)
 
-```typescript
-    const autofix = new Autofix().with(AddLicenseFile);
-```
+Or explore the built-in goal implementations:
+
+* [Build](build.md) - run a build, with an existing integration or your own function
+* [Autofix](#autofix) - apply formatting changes, [CHANGELOG](../pack/changelog.md) updates, etc. as automatic commits
+* [AutoInspect](#autoinspect) - inspect the new code
+* [PushImpact](#pushimpact) - run any other function as a response to the push
+* [Fingerprint](fingerprint.md) - compute a snapshot of some aspect of the code, for tracking
 
 After you've created some goals, [choose when to set them][setting-goals].
 
@@ -89,12 +96,13 @@ const releaseDocs = createGoal(
 [goaldef-apidoc]: https://atomist.github.io/sdm/interfaces/_lib_api_goal_goal_.goaldefinition.html (GoalDefinition API Doc)
 [egr-apidoc]: https://atomist.github.io/sdm/interfaces/_lib_api_goal_executegoalresult_.executegoalresult.html (ExecuteGoalResult API Doc)
 
-/* ### Waiting on a Precondition
+### Waiting on a Precondition
 
-Sometimes goals need other goals to have completed before they can start. This is handled in the push rule DSL.
+Sometimes goals need other goals to have completed before they can start. This is handled while [setting goals](set-goals.md) on a push.
 
 Sometimes they wait on external conditions, such as another service having started. This is handled with *wait rules*.
-*/
+
+<!-- * TODO: document wait rules -->
 
 ## Built-in Goals
 
@@ -138,7 +146,7 @@ This goal tells the SDM to check each push and create commits on top of it to co
 violations in the code. For example, you can use this for automatic linting or to add license headers
 where they have been omitted.
 
- Instantiate the goal:
+Instantiate the goal:
 
 ``` typescript
 const autofixGoal = new Autofix().with(AddApacheLicenseFileAutofix);
